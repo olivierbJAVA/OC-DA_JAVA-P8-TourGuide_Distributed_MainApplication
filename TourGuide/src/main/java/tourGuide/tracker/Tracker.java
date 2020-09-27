@@ -7,20 +7,21 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import rewardModule.service.IRewardsService;
-import tourGuide.domain.User;
+import tourGuide.domain.user.User;
+import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
 public class Tracker extends Thread {
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
+
 	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(1);//initial = 5
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	//private final ExecutorService executorService = Executors.newFixedThreadPool(10);
 	private final TourGuideService tourGuideService;
-	private final IRewardsService rewardsService;
+	private final RewardsService rewardsService;
 	private boolean stop = false;
 
-	public Tracker(TourGuideService tourGuideService, IRewardsService rewardsService) {
+	public Tracker(TourGuideService tourGuideService, RewardsService rewardsService) {
 		this.tourGuideService = tourGuideService;
 		this.rewardsService = rewardsService;
 
@@ -81,6 +82,5 @@ public class Tracker extends Thread {
 			}
 			*/
 		}
-		
 	}
 }

@@ -3,7 +3,7 @@ package tourGuide.controller;
 import java.util.HashMap;
 import java.util.List;
 
-import gpsUtil.location.Location;
+import tourGuide.domain.location.Location;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -12,11 +12,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.jsoniter.output.JsonStream;
 
-import gpsUtil.location.VisitedLocation;
-import tourGuide.domain.User;
-import preferencesModule.domain.UserPreferences;
+import tourGuide.domain.location.VisitedLocation;
+import tourGuide.domain.user.User;
+import tourGuide.domain.user.UserPreferences;
 import tourGuide.service.TourGuideService;
-import tripPricer.Provider;
+import tourGuide.domain.tripdeal.Provider;
 
 @RestController
 public class TourGuideController {

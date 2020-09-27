@@ -1,9 +1,4 @@
-package preferencesModule.domain;
-
-import javax.money.CurrencyUnit;
-import javax.money.Monetary;
-
-import org.javamoney.moneta.Money;
+package tourGuide.domain.user;
 
 
 public class UserPreferences {

@@ -1,6 +1,4 @@
-package tourGuide.domain;
-
-import gpsUtil.location.Location;
+package tourGuide.domain.location;
 
 public class NearbyAttraction {
 
@@ -16,6 +14,9 @@ public class NearbyAttraction {
         this.userLocation = userLocation;
         this.distanceAttractionUserLocation = distanceAttractionUserLocation;
         this.rewardsPointForAttraction = rewardsPointForAttraction;
+    }
+
+    public NearbyAttraction() {
     }
 
     public String getAttractionName() {

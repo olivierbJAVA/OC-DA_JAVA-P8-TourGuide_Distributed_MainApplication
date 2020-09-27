@@ -1,34 +1,35 @@
 package tourGuide.service;
 
+import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import org.javamoney.moneta.Money;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-//Problème import Modules
-import gpsModule.service.IGpsService;
-import gpsUtil.location.Attraction;
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
-import preferencesModule.service.IPreferencesService;
-import rewardModule.service.IRewardsService;
 import tourGuide.configuration.TourGuideInitialization;
-import tourGuide.domain.NearbyAttraction;
+import tourGuide.domain.location.NearbyAttraction;
+import tourGuide.domain.location.Attraction;
+import tourGuide.domain.location.Location;
+import tourGuide.domain.location.VisitedLocation;
 import tourGuide.tracker.Tracker;
-import tourGuide.domain.User;
-import preferencesModule.domain.UserPreferences;
-import rewardModule.domain.UserReward;
-import tripPricer.Provider;
+import tourGuide.domain.user.User;
+import tourGuide.domain.user.UserPreferences;
+import tourGuide.domain.user.UserReward;
+import tourGuide.domain.tripdeal.Provider;
 
 @Service
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
-	private final IGpsService gpsService;
-	private final IRewardsService rewardsService;
-	private final IPreferencesService preferencesService;
+
+	private final RewardsService rewardsService;
 	public final Tracker tracker;
 	boolean testMode = true;
 
@@ -36,10 +37,8 @@ public class TourGuideService {
 	//@Autowired
 	private TourGuideInitialization init = new TourGuideInitialization();
 
-	public TourGuideService(IGpsService gpsService, IRewardsService rewardsService, IPreferencesService preferencesService) {
-		this.gpsService = gpsService;
+	public TourGuideService(RewardsService rewardsService) {
 		this.rewardsService = rewardsService;
-		this.preferencesService = preferencesService;
 
 		if(testMode) {
 			logger.info("TestMode enabled");
@@ -85,27 +84,95 @@ public class TourGuideService {
 	// Appel preferencesService.getPrice
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
-		List<Provider> providers = preferencesService.getPrice(init.getTripPricerApiKey(), user.getUserId(), user.getUserPreferences().getNumberOfAdults(),
-				user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
+
+		List<Provider> providers = new ArrayList<>();
+
+		//List<Provider> providers = preferencesService.getPrice(init.getTripPricerApiKey(), user.getUserId(), user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
+
+		logger.debug("Request getTripDeals build");
+		HttpClient client = HttpClient.newHttpClient();
+		String requestURI = "http://localhost:8083/getPrice?apiKey=" + init.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
+
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(requestURI))
+				.GET()
+				.build();
+		try {
+			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			logger.debug("Status code = " + response.statusCode());
+			logger.debug("Response Body = " + response.body());
+			ObjectMapper mapper = new ObjectMapper();
+			providers = mapper.readValue(response.body(), new TypeReference<List<Provider>>(){ });
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
 		user.setTripDeals(providers);
 		return providers;
 	}
 	// Appel gpsService.getUserLocation
 	public VisitedLocation trackUserLocation(User user) {
-		VisitedLocation visitedLocation = gpsService.getUserLocation(user.getUserId());
+		logger.debug("Track Location - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
+
+		VisitedLocation visitedLocation = new VisitedLocation();
+
+		logger.debug("Request getUserLocation build");
+		HttpClient client = HttpClient.newHttpClient();
+		String requestURI = "http://localhost:8081/getUserLocation?userId=" + user.getUserId();
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(requestURI))
+				//.header("userId", user.getUserId().toString())
+				.GET()
+				.build();
+		try {
+			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			logger.debug("Status code = " + response.statusCode());
+			logger.debug("Response Body = " + response.body());
+			ObjectMapper mapper = new ObjectMapper();
+			visitedLocation = mapper.readValue(response.body(), VisitedLocation.class);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		//VisitedLocation visitedLocation = gpsService.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
-		//rewardsService.calculateRewards(user);
+
 		return visitedLocation;
 	}
 	// Appel gpsService.getAttractions & rewardsService.getDistance & rewardsService.getRewardPoints
 	public List<NearbyAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
 		List<NearbyAttraction> nearbyAttractions = new ArrayList<>();
-		List<Attraction> allAttractions = gpsService.getAttractions();
+		List<Attraction> allAttractions = new ArrayList<>();
+
+		logger.debug("Request getNearByAttractions build");
+		HttpClient client = HttpClient.newHttpClient();
+		String requestURI = "http://localhost:8081/getAttractions";
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(requestURI))
+				.GET()
+				.build();
+		try {
+			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			logger.debug("Status code = " + response.statusCode());
+			logger.debug("Response Body = " + response.body());
+			ObjectMapper mapper = new ObjectMapper();
+			allAttractions = mapper.readValue(response.body(), new TypeReference<List<Attraction>>(){ });
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+
+		//List<Attraction> allAttractions = gpsService.getAttractions();
 		TreeMap<Double, NearbyAttraction> treeAttractionDistance = new TreeMap<>();
 		allAttractions.forEach(attraction -> treeAttractionDistance.put(rewardsService.getDistance(attraction, visitedLocation.location), new NearbyAttraction(attraction.attractionName, new Location(attraction.latitude, attraction.longitude), visitedLocation.location, rewardsService.getDistance(attraction, visitedLocation.location), rewardsService.getRewardPoints(attraction, user))));
 		nearbyAttractions = treeAttractionDistance.values().stream()
 															.limit(5)
 															.collect(Collectors.toList());
+
 		return nearbyAttractions;
 	}
 

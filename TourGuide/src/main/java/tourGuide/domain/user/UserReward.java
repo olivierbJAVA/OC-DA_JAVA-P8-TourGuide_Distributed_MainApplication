@@ -1,8 +1,7 @@
-package rewardModule.domain;
+package tourGuide.domain.user;
 
-// Problème import dans un autre Module
-import gpsUtil.location.Attraction;
-import gpsUtil.location.VisitedLocation;
+import tourGuide.domain.location.Attraction;
+import tourGuide.domain.location.VisitedLocation;
 
 public class UserReward {
 

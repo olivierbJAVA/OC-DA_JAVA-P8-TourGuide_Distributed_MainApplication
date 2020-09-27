@@ -1,14 +1,12 @@
-package tourGuide.domain;
+package tourGuide.domain.user;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
-import gpsUtil.location.VisitedLocation;
-import preferencesModule.domain.UserPreferences;
-import rewardModule.domain.UserReward;
-import tripPricer.Provider;
+import tourGuide.domain.location.VisitedLocation;
+import tourGuide.domain.tripdeal.Provider;
 
 public class User {
 	private final UUID userId;

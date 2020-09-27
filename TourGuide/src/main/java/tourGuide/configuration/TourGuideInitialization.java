@@ -1,11 +1,11 @@
 package tourGuide.configuration;
 
-import gpsUtil.location.Location;
-import gpsUtil.location.VisitedLocation;
+import tourGuide.domain.location.Location;
+import tourGuide.domain.location.VisitedLocation;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import preferencesModule.domain.UserPreferences;
-import tourGuide.domain.User;
+import tourGuide.domain.user.UserPreferences;
+import tourGuide.domain.user.User;
 import tourGuide.helper.InternalTestHelper;
 
 import java.time.LocalDateTime;
