@@ -7,6 +7,7 @@ import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import tourGuide.domain.location.Attraction;
 import tourGuide.domain.user.User;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
@@ -46,6 +47,9 @@ public class Tracker extends Thread {
 			}
 			
 			List<User> users = tourGuideService.getAllUsers();
+
+			List<Attraction> allAttractions = rewardsService.getAllAttractions();
+
 			logger.debug("Begin Tracker. Tracking " + users.size() + " users.");
 			stopWatch.start();
 
@@ -55,12 +59,12 @@ public class Tracker extends Thread {
 			users.forEach((user)-> {
 				CompletableFuture
 						.runAsync(()->tourGuideService.trackUserLocation(user), forkJoinPool)
-						.thenAccept(unused->rewardsService.calculateRewards(user));
+						.thenAccept(unused->rewardsService.calculateRewards(user, allAttractions));
 			});
 
 			//Optional : in case you want to wait for the completion of track users and calculate rewards before Tracker sleeping
 			//Wait maximum between Timeout and forkJoinPool has finished tasks
-			forkJoinPool.awaitQuiescence(10,TimeUnit.MINUTES);
+			//forkJoinPool.awaitQuiescence(10,TimeUnit.MINUTES);
 
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
