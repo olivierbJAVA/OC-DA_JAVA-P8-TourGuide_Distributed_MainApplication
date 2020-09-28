@@ -4,11 +4,6 @@ package tourGuide.domain.user;
 public class UserPreferences {
 	
 	private int attractionProximity = Integer.MAX_VALUE;
-	/*
-	private CurrencyUnit currency = Monetary.getCurrency("USD");
-	private Money lowerPricePoint = Money.of(0, currency);
-	private Money highPricePoint = Money.of(Integer.MAX_VALUE, currency);
-	*/
 	private String currency = "USD";
 	private Double lowerPricePoint = 0D;
 	private Double highPricePoint = 1000000D;
@@ -28,23 +23,6 @@ public class UserPreferences {
 		return attractionProximity;
 	}
 
-	/*
-	public Money getLowerPricePoint() {
-		return lowerPricePoint;
-	}
-
-	public void setLowerPricePoint(Money lowerPricePoint) {
-		this.lowerPricePoint = lowerPricePoint;
-	}
-
-	public Money getHighPricePoint() {
-		return highPricePoint;
-	}
-
-	public void setHighPricePoint(Money highPricePoint) {
-		this.highPricePoint = highPricePoint;
-	}
-	*/
 	// Added getter and setter for CurrencyUnit
 	public String getCurrency() {
 		return currency;
