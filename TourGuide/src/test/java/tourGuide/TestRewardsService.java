@@ -27,6 +27,7 @@ public class TestRewardsService {
 		// ARRANGE
 		InternalTestHelper.setInternalUserNumber(0);
 		RewardsService rewardsService = new RewardsService();
+		List<Attraction> allAttractions = rewardsService.getAllAttractions();
 		TourGuideService tourGuideService = new TourGuideService(rewardsService);
 		tourGuideService.tracker.stopTracking();
 
@@ -35,7 +36,7 @@ public class TestRewardsService {
 		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
 
 		// ACT
-		rewardsService.calculateRewards(user);
+		rewardsService.calculateRewards(user, allAttractions);
 
 		// ASSERT
 		List<UserReward> userRewards = user.getUserRewards();
@@ -74,11 +75,12 @@ public class TestRewardsService {
 		InternalTestHelper.setInternalUserNumber(1);
 		RewardsService rewardsService = new RewardsService();
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
+		List<Attraction> allAttractions = rewardsService.getAllAttractions();
 		TourGuideService tourGuideService = new TourGuideService(rewardsService);
 		tourGuideService.tracker.stopTracking();
 
 		// ACT
-		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0));
+		rewardsService.calculateRewards(tourGuideService.getAllUsers().get(0), allAttractions);
 		List<UserReward> userRewards = tourGuideService.getUserRewards(tourGuideService.getAllUsers().get(0));
 
 		// ASSERT
