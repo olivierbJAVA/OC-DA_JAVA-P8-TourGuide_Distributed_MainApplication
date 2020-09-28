@@ -33,7 +33,6 @@ public class TourGuideService {
 	public final Tracker tracker;
 	boolean testMode = true;
 
-	// Mieux si passé en paramètre du constructeur ?
 	//@Autowired
 	private TourGuideInitialization init = new TourGuideInitialization();
 
@@ -81,17 +80,15 @@ public class TourGuideService {
 		allUsers.forEach(user -> allCurrentLocations.put(user.getUserId().toString(), user.getLastVisitedLocation().location));
 		return allCurrentLocations;
 	}
-	// Appel preferencesService.getPrice
+
 	public List<Provider> getTripDeals(User user) {
 		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 
 		List<Provider> providers = new ArrayList<>();
 
-		//List<Provider> providers = preferencesService.getPrice(init.getTripPricerApiKey(), user.getUserId(), user.getUserPreferences().getNumberOfAdults(), user.getUserPreferences().getNumberOfChildren(), user.getUserPreferences().getTripDuration(), cumulatativeRewardPoints);
-
 		logger.debug("Request getTripDeals build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://localhost:8083/getPrice?apiKey=" + init.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
+		String requestURI = "http://localhost:8083/getPrice?apiKey=" + TourGuideInitialization.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
 
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
@@ -103,16 +100,15 @@ public class TourGuideService {
 			logger.debug("Response Body = " + response.body());
 			ObjectMapper mapper = new ObjectMapper();
 			providers = mapper.readValue(response.body(), new TypeReference<List<Provider>>(){ });
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (IOException | InterruptedException e) {
+			logger.error(e.toString());
 			e.printStackTrace();
 		}
 
 		user.setTripDeals(providers);
 		return providers;
 	}
-	// Appel gpsService.getUserLocation
+
 	public VisitedLocation trackUserLocation(User user) {
 		logger.debug("Track Location - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
 
@@ -132,19 +128,19 @@ public class TourGuideService {
 			logger.debug("Response Body = " + response.body());
 			ObjectMapper mapper = new ObjectMapper();
 			visitedLocation = mapper.readValue(response.body(), VisitedLocation.class);
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (IOException | InterruptedException e) {
+			logger.error(e.toString());
 			e.printStackTrace();
 		}
-		//VisitedLocation visitedLocation = gpsService.getUserLocation(user.getUserId());
 		user.addToVisitedLocations(visitedLocation);
 
 		return visitedLocation;
 	}
-	// Appel gpsService.getAttractions & rewardsService.getDistance & rewardsService.getRewardPoints
+
 	public List<NearbyAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
 		List<NearbyAttraction> nearbyAttractions = new ArrayList<>();
+		List<Attraction> allAttractions = rewardsService.getAllAttractions();
+		/*
 		List<Attraction> allAttractions = new ArrayList<>();
 
 		logger.debug("Request getNearByAttractions build");
@@ -165,7 +161,7 @@ public class TourGuideService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		*/
 		//List<Attraction> allAttractions = gpsService.getAttractions();
 		TreeMap<Double, NearbyAttraction> treeAttractionDistance = new TreeMap<>();
 		allAttractions.forEach(attraction -> treeAttractionDistance.put(rewardsService.getDistance(attraction, visitedLocation.location), new NearbyAttraction(attraction.attractionName, new Location(attraction.latitude, attraction.longitude), visitedLocation.location, rewardsService.getDistance(attraction, visitedLocation.location), rewardsService.getRewardPoints(attraction, user))));
