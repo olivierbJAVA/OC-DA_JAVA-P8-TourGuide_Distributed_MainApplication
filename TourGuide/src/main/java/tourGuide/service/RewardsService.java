@@ -41,14 +41,15 @@ public class RewardsService {
 		proximityBuffer = defaultProximityBuffer;
 	}
 
-	public void calculateRewards(User user) {
+	public void calculateRewards(User user, List<Attraction> allAttractions) {
 		logger.debug("Calculate Rewards - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
 
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 
+		List<Attraction> attractions = allAttractions;
+		//List<Attraction> attractions = getAllAttractions();
+		/*
 		List<Attraction> attractions = new ArrayList<>();
-
-		//List<Attraction> attractions = gpsService.getAttractions();
 
 		logger.debug("Request getAttractions build");
 		HttpClient client = HttpClient.newHttpClient();
@@ -68,7 +69,7 @@ public class RewardsService {
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-
+		*/
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
 				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
@@ -78,6 +79,30 @@ public class RewardsService {
 				}
 			}
 		}
+	}
+
+	public List<Attraction> getAllAttractions(){
+		List<Attraction> attractions = new ArrayList<>();
+
+		logger.debug("Request getAttractions build");
+		HttpClient client = HttpClient.newHttpClient();
+		String requestURI = "http://localhost:8081/getAttractions";
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(requestURI))
+				.GET()
+				.build();
+		try {
+			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			logger.debug("Status code = " + response.statusCode());
+			logger.debug("Response Body = " + response.body());
+			ObjectMapper mapper = new ObjectMapper();
+			attractions = mapper.readValue(response.body(), new TypeReference<List<Attraction>>(){ });
+		} catch (IOException | InterruptedException e) {
+			logger.error(e.toString());
+			e.printStackTrace();
+		}
+
+		return attractions;
 	}
 
 	public int getRewardPoints(Attraction attraction, User user) {
@@ -95,14 +120,12 @@ public class RewardsService {
 			logger.debug("Status code = " + response.statusCode());
 			logger.debug("Response Body = " + response.body());
 			rewardsPoint=Integer.parseInt(response.body());
-		} catch (IOException | NumberFormatException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
+		} catch (IOException | NumberFormatException | InterruptedException e) {
+			logger.error(e.toString());
 			e.printStackTrace();
 		}
 		logger.debug("Response RewardsPoint = " + rewardsPoint);
 		return rewardsPoint;
-		//return rewardsCentral.getAttractionRewardPoints(attraction.attractionId, user.getUserId());
 	}
 
 	public boolean isWithinAttractionProximity(Attraction attraction, Location location) {
