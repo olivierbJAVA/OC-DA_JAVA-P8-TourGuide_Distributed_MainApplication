@@ -10,11 +10,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.jsoniter.output.JsonStream;
-
+import tourGuide.domain.location.NearbyAttraction;
 import tourGuide.domain.location.VisitedLocation;
 import tourGuide.domain.user.User;
 import tourGuide.domain.user.UserPreferences;
+import tourGuide.domain.user.UserReward;
 import tourGuide.service.TourGuideService;
 import tourGuide.domain.tripdeal.Provider;
 
@@ -30,43 +30,43 @@ public class TourGuideController {
     }
     
     @RequestMapping("/getLocation") 
-    public String getLocation(@RequestParam String userName) {
+    public Location getLocation(@RequestParam String userName) {
     	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-		return JsonStream.serialize(visitedLocation.location);
+		return visitedLocation.location;
     }
     
     @RequestMapping("/getNearbyAttractions")
-    public String getNearbyAttractions(@RequestParam String userName) {
+    public List<NearbyAttraction> getNearbyAttractions(@RequestParam String userName) {
     	VisitedLocation visitedLocation = tourGuideService.getUserLocation(getUser(userName));
-    	return JsonStream.serialize(tourGuideService.getNearByAttractions(visitedLocation, getUser(userName)));
+    	return tourGuideService.getNearByAttractions(visitedLocation, getUser(userName));
     }
     
     @RequestMapping("/getRewards") 
-    public String getRewards(@RequestParam String userName) {
-    	return JsonStream.serialize(tourGuideService.getUserRewards(getUser(userName)));
+    public List<UserReward> getRewards(@RequestParam String userName) {
+    	return tourGuideService.getUserRewards(getUser(userName));
     }
 
     @RequestMapping("/getAllCurrentLocations")
-    public String getAllCurrentLocations() {
+    public HashMap<String, Location> getAllCurrentLocations() {
         HashMap<String, Location> allCurrentLocations = tourGuideService.getAllCurrentLocations();
-        return JsonStream.serialize(allCurrentLocations);
+        return allCurrentLocations;
     }
     
     @RequestMapping("/getTripDeals")
-    public String getTripDeals(@RequestParam String userName) {
+    public List<Provider> getTripDeals(@RequestParam String userName) {
     	List<Provider> providers = tourGuideService.getTripDeals(getUser(userName));
-    	return JsonStream.serialize(providers);
+    	return providers;
     }
 
     @RequestMapping("/getPreferences")
-    public String getPreferences(@RequestParam String userName) {
+    public UserPreferences getPreferences(@RequestParam String userName) {
         UserPreferences userPreferences = tourGuideService.getUserPreferences(getUser(userName));
-        return JsonStream.serialize(userPreferences);
+        return userPreferences;
     }
 
     @RequestMapping("/postPreferences")
-    public String postPreferences(@RequestParam String userName, @RequestBody UserPreferences userPreferences) {
-        return JsonStream.serialize(tourGuideService.postUserPreferences(getUser(userName), userPreferences));
+    public UserPreferences postPreferences(@RequestParam String userName, @RequestBody UserPreferences userPreferences) {
+        return tourGuideService.postUserPreferences(getUser(userName), userPreferences);
     }
 
     private User getUser(String userName) {
