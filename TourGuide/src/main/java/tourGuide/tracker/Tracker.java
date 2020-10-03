@@ -110,7 +110,12 @@ public class Tracker extends Thread {
 			users.forEach((user)-> {
 				CompletableFuture
 						.runAsync(()->tourGuideService.trackUserLocation(user), forkJoinPool)
-						.thenAccept(unused->rewardsService.calculateRewards(user, allAttractions));
+						.thenAccept(unused->rewardsService.calculateRewards(user, allAttractions))
+						.exceptionally(exception -> {
+							logger.error("Error in Tracker : " + exception );
+							return null;
+						})
+				;
 			});
 
 			//Optional : in case you want to wait for the completion of track users and calculate rewards before Tracker sleeping
