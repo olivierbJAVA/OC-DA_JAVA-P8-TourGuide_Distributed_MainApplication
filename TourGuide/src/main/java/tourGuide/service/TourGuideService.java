@@ -126,6 +126,7 @@ public class TourGuideService {
 				.build();
 
 		// Essai sendAsync
+		/*
 		try {
 			CompletableFuture<HttpResponse <String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
 			ObjectMapper mapper = new ObjectMapper();
@@ -134,8 +135,8 @@ public class TourGuideService {
 			logger.error(e.toString());
 			e.printStackTrace();
 		}
+		*/
 
-		/*
 		try {
 			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			logger.debug("Status code = " + response.statusCode());
@@ -146,7 +147,7 @@ public class TourGuideService {
 			logger.error(e.toString());
 			e.printStackTrace();
 		}
-		*/
+
 		user.addToVisitedLocations(visitedLocation);
 
 		return visitedLocation;
