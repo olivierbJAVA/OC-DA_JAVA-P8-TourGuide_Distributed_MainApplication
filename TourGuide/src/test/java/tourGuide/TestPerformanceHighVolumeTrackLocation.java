@@ -70,7 +70,7 @@ public class TestPerformanceHighVolumeTrackLocation {
 		stopWatch.start();
 
 		// ACT
-		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
+		ForkJoinPool forkJoinPool = new ForkJoinPool(100);// Tests : 10 & 200
 		allUsers.forEach((user)-> {
 			CompletableFuture
 					.runAsync(()->tourGuideService.trackUserLocation(user), forkJoinPool)
