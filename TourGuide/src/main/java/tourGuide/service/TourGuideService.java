@@ -6,6 +6,8 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -122,6 +124,18 @@ public class TourGuideService {
 				//.header("userId", user.getUserId().toString())
 				.GET()
 				.build();
+
+		// Essai sendAsync
+		try {
+			CompletableFuture<HttpResponse <String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+			ObjectMapper mapper = new ObjectMapper();
+			visitedLocation = mapper.readValue(response.get().body(), VisitedLocation.class);
+		} catch (IOException | InterruptedException | ExecutionException e) {
+			logger.error(e.toString());
+			e.printStackTrace();
+		}
+
+		/*
 		try {
 			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			logger.debug("Status code = " + response.statusCode());
@@ -132,6 +146,7 @@ public class TourGuideService {
 			logger.error(e.toString());
 			e.printStackTrace();
 		}
+		*/
 		user.addToVisitedLocations(visitedLocation);
 
 		return visitedLocation;
