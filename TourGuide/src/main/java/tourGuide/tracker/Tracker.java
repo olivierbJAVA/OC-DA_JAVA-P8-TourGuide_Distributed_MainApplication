@@ -1,7 +1,15 @@
 package tourGuide.tracker;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.time.StopWatch;
 import org.slf4j.Logger;
@@ -55,6 +63,49 @@ public class Tracker extends Thread {
 
 			ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 			//final ForkJoinPool test = new ForkJoinPool(1,	ForkJoinPool.defaultForkJoinWorkerThreadFactory, null,true);
+
+			/*
+			logger.debug("Request getUserLocation build in Tracker");
+			List<URI> targets = new ArrayList<>();
+			HttpClient client = HttpClient.newBuilder().executor(forkJoinPool).build();
+			*/
+			/*
+			// Essai 1
+			users.forEach((user)-> {
+						try {
+							targets.add( new URI("http://localhost:8081/getUserLocation?userId=" + user.getUserId()));
+						} catch (URISyntaxException e) {
+							e.printStackTrace();
+						}
+
+					});
+
+					List<CompletableFuture<String>> result = targets
+					.stream()
+					.map(target -> client.sendAsync( HttpRequest.newBuilder(target).GET().build(), HttpResponse.BodyHandlers.ofString() )
+					.thenApply(response -> user.addToVisitedLocations(response.body()) )     )
+					.collect(Collectors.toList());
+			*/
+			/*
+			// Essai 2
+			users.forEach((user)-> {
+				CompletableFuture
+						.runAsync(() -> {
+							try {
+								client
+												.sendAsync( HttpRequest
+														.newBuilder(
+																new URI("http://localhost:8081/getUserLocation?userId=" + user.getUserId()))
+														.GET()
+														.build(), HttpResponse.BodyHandlers.ofString() );
+							} catch (URISyntaxException e) {
+								e.printStackTrace();
+							}
+						})
+						.thenApply(response -> user.addToVisitedLocations(response.body()) )
+						.thenAccept(unused -> rewardsService.calculateRewards(user, allAttractions));
+			});
+			*/
 
 			users.forEach((user)-> {
 				CompletableFuture
