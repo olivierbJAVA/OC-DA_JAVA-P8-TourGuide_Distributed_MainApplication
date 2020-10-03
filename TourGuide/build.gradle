@@ -16,7 +16,7 @@ apply plugin: "jacoco"
 
 
 bootJar {
-    archiveFileName = "tourGuide-1.0.0.jar"
+    archiveFileName = "TourGuide_MainApp-1.0.0.jar"
 }
 
 repositories {
