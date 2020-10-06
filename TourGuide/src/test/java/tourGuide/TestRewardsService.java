@@ -5,7 +5,7 @@ import static org.junit.Assert.*;
 import java.util.*;
 
 import org.junit.Test;
-;
+
 import tourGuide.domain.location.Attraction;
 import tourGuide.domain.location.Location;
 import tourGuide.domain.location.VisitedLocation;
