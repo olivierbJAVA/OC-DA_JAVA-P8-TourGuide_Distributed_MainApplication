@@ -86,7 +86,7 @@ public class RewardsService {
 
 		logger.debug("Request getAttractions build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://localhost:8081/getAttractions";
+		String requestURI = "http://gps:8081/getAttractions";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
 				.GET()
@@ -110,7 +110,7 @@ public class RewardsService {
 
 		logger.debug("Request getRewardPoints build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://localhost:8082/getRewardPoints?attractionId=" + attraction.attractionId + "&userId=" + user.getUserId();
+		String requestURI = "http://rewards:8082/getRewardPoints?attractionId=" + attraction.attractionId + "&userId=" + user.getUserId();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
 				.GET()
