@@ -90,7 +90,7 @@ public class TourGuideService {
 
 		logger.debug("Request getTripDeals build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://localhost:8083/getPrice?apiKey=" + TourGuideInitialization.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
+		String requestURI = "http://preferences:8083/getPrice?apiKey=" + TourGuideInitialization.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
 
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
@@ -118,7 +118,7 @@ public class TourGuideService {
 
 		logger.debug("Request getUserLocation build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://localhost:8081/getUserLocation?userId=" + user.getUserId();
+		String requestURI = "http://gps:8081/getUserLocation?userId=" + user.getUserId();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
 				//.header("userId", user.getUserId().toString())
