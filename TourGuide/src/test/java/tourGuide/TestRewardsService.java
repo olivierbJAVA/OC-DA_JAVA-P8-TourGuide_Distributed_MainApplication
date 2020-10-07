@@ -4,8 +4,12 @@ import static org.junit.Assert.*;
 
 import java.util.*;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 
+import org.slf4j.Logger;
+import org.springframework.boot.logging.LogLevel;
+import org.springframework.boot.logging.LoggingSystem;
 import tourGuide.domain.location.Attraction;
 import tourGuide.domain.location.Location;
 import tourGuide.domain.location.VisitedLocation;
@@ -19,6 +23,25 @@ import utils.TourGuideTestUtil;
 
 public class TestRewardsService {
 
+	private static String gpsServiceName;
+	private static String gpsServicePort;
+	private static String rewardsServiceName;
+	private static String rewardsServicePort;
+	private static String preferencesServiceName;
+	private static String preferencesServicePort;
+
+    @BeforeClass
+    public static void beforeTest() {
+        gpsServiceName = "localhost";
+        gpsServicePort = "8081";
+        rewardsServiceName = "localhost";
+        rewardsServicePort = "8082";
+        preferencesServiceName = "localhost";
+        preferencesServicePort = "8083";
+
+        LoggingSystem.get(ClassLoader.getSystemClassLoader()).setLogLevel(Logger.ROOT_LOGGER_NAME, LogLevel.INFO);
+    }
+
 	@Test
 	public void calculateRewards() {
 		//Added to fix NumberFormatException due to decimal number separator
@@ -26,9 +49,10 @@ public class TestRewardsService {
 
 		// ARRANGE
 		InternalTestHelper.setInternalUserNumber(0);
-		RewardsService rewardsService = new RewardsService();
+
+		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		List<Attraction> allAttractions = rewardsService.getAllAttractions();
-		TourGuideService tourGuideService = new TourGuideService(rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
@@ -47,7 +71,7 @@ public class TestRewardsService {
 	@Test
 	public void isWithinAttractionProximity() {
 		// ARRANGE
-		RewardsService rewardsService = new RewardsService();
+		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 
 		Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
 
@@ -58,7 +82,7 @@ public class TestRewardsService {
 	@Test
 	public void nearAttraction() {
 		// ARRANGE
-		RewardsService rewardsService = new RewardsService();
+		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 		Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
 
@@ -68,15 +92,14 @@ public class TestRewardsService {
 		assertTrue(rewardsService.nearAttraction(visitedLocationRandom, attraction));
 	}
 
-	//@Ignore // Needs fixed - can throw ConcurrentModificationException
 	@Test
 	public void nearAllAttractions() {
 		// ARRANGE
 		InternalTestHelper.setInternalUserNumber(1);
-		RewardsService rewardsService = new RewardsService();
+		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 		List<Attraction> allAttractions = rewardsService.getAllAttractions();
-		TourGuideService tourGuideService = new TourGuideService(rewardsService);
+		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
 
 		// ACT

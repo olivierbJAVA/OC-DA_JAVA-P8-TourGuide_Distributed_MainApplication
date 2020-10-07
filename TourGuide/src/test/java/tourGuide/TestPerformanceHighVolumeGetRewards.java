@@ -30,8 +30,22 @@ import static org.mockito.Mockito.doReturn;
 
 public class TestPerformanceHighVolumeGetRewards {
 
+	private static String gpsServiceName;
+	private static String gpsServicePort;
+	private static String rewardsServiceName;
+	private static String rewardsServicePort;
+	private static String preferencesServiceName;
+	private static String preferencesServicePort;
+
 	@BeforeClass
-	public static void setErrorLogging() {
+	public static void beforeTest() {
+		gpsServiceName = "localhost";
+		gpsServicePort = "8081";
+		rewardsServiceName = "localhost";
+		rewardsServicePort = "8082";
+		preferencesServiceName = "localhost";
+		preferencesServicePort = "8083";
+
 		LoggingSystem.get(ClassLoader.getSystemClassLoader()).setLogLevel(Logger.ROOT_LOGGER_NAME, LogLevel.INFO);
 	}
 	/*
@@ -62,10 +76,12 @@ public class TestPerformanceHighVolumeGetRewards {
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
 		InternalTestHelper.setInternalUserNumber(100);
-		RewardsService rewardsService = new RewardsService();
+
+		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
+		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		List<Attraction> allAttractions = rewardsService.getAllAttractions();
 		VisitedLocation visitedLocationRandom = new VisitedLocation(UUID.randomUUID(), new Location(TourGuideTestUtil.generateRandomLatitude(), TourGuideTestUtil.generateRandomLongitude()), TourGuideTestUtil.getRandomTime());
-		TourGuideService mockTourGuideService = Mockito.spy(new TourGuideService(rewardsService));
+		TourGuideService mockTourGuideService = Mockito.spy(tourGuideService);
 		doReturn(visitedLocationRandom).when(mockTourGuideService).trackUserLocation(any(User.class));
 		mockTourGuideService.tracker.stopTracking();
 		//Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);

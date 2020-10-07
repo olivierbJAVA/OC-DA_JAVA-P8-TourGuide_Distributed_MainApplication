@@ -28,8 +28,22 @@ import tourGuide.domain.user.User;
 
 public class TestPerformanceHighVolumeTrackLocation {
 
+	private static String gpsServiceName;
+	private static String gpsServicePort;
+	private static String rewardsServiceName;
+	private static String rewardsServicePort;
+	private static String preferencesServiceName;
+	private static String preferencesServicePort;
+
 	@BeforeClass
-	public static void setErrorLogging() {
+	public static void beforeTest() {
+		gpsServiceName = "localhost";
+		gpsServicePort = "8081";
+		rewardsServiceName = "localhost";
+		rewardsServicePort = "8082";
+		preferencesServiceName = "localhost";
+		preferencesServicePort = "8083";
+
 		LoggingSystem.get(ClassLoader.getSystemClassLoader()).setLogLevel(Logger.ROOT_LOGGER_NAME, LogLevel.INFO);
 	}
 	/*
@@ -54,16 +68,18 @@ public class TestPerformanceHighVolumeTrackLocation {
 	//@Ignore
 	@Test
 	public void highVolumeTrackLocation() {
+
 		//Added to fix NumberFormatException due to decimal number separator
 		Locale.setDefault(new Locale("en", "US"));
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
 		InternalTestHelper.setInternalUserNumber(100);
-		RewardsService mockRewardsService = Mockito.spy(new RewardsService());
+
+		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort));
 		List<Attraction> allAttractions = mockRewardsService.getAllAttractions();
 		doNothing().when(mockRewardsService).calculateRewards(any(User.class), ArgumentMatchers.anyList());
-		TourGuideService tourGuideService = new TourGuideService(mockRewardsService);
+		TourGuideService tourGuideService = new TourGuideService(mockRewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
 		List<User> allUsers = tourGuideService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
@@ -84,5 +100,6 @@ public class TestPerformanceHighVolumeTrackLocation {
 		System.out.println("highVolumeTrackLocation: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
 		assertTrue(TimeUnit.MINUTES.toSeconds(15) >= TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()));
 		assertTrue(result);
+
 	}
 }
