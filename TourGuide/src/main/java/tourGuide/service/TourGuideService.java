@@ -6,15 +6,15 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
 
 import tourGuide.configuration.TourGuideInitialization;
@@ -29,30 +29,28 @@ import tourGuide.domain.user.UserReward;
 import tourGuide.domain.tripdeal.Provider;
 
 @Service
+@PropertySource("classpath:application.properties")
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
+
+	//@Autowired
+	TourGuideInitialization init = new TourGuideInitialization();
 
 	private final RewardsService rewardsService;
 	public final Tracker tracker;
 	boolean testMode = true;
 
-	//@Autowired
-	private TourGuideInitialization init = new TourGuideInitialization();
+	private final String gpsServiceName;
+	private final String gpsServicePort;
+	private final String preferencesServiceName;
+	private final String preferencesServicePort;
 
-	@Value("${service.gps.name}")
-	String gpsServiceName;
-
-	@Value("${service.gps.port}")
-	String gpsServicePort;
-
-	@Value("${service.preferences.name}")
-	String preferencesServiceName;
-
-	@Value("${service.preferences.port}")
-	String preferencesServicePort;
-
-	public TourGuideService(RewardsService rewardsService) {
+	public TourGuideService(RewardsService rewardsService, @Value("${service.gps.name}") String gpsServiceName, @Value("${service.gps.port}") String gpsServicePort, @Value("${service.preferences.name}") String preferencesServiceName, @Value("${service.preferences.port}") String preferencesServicePort) {
 		this.rewardsService = rewardsService;
+		this.gpsServiceName = gpsServiceName;
+		this.gpsServicePort = gpsServicePort;
+		this.preferencesServiceName = preferencesServiceName;
+		this.preferencesServicePort = preferencesServicePort;
 
 		if(testMode) {
 			logger.info("TestMode enabled");
@@ -169,29 +167,7 @@ public class TourGuideService {
 	public List<NearbyAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
 		List<NearbyAttraction> nearbyAttractions = new ArrayList<>();
 		List<Attraction> allAttractions = rewardsService.getAllAttractions();
-		/*
-		List<Attraction> allAttractions = new ArrayList<>();
 
-		logger.debug("Request getNearByAttractions build");
-		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://localhost:8081/getAttractions";
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(requestURI))
-				.GET()
-				.build();
-		try {
-			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			logger.debug("Status code = " + response.statusCode());
-			logger.debug("Response Body = " + response.body());
-			ObjectMapper mapper = new ObjectMapper();
-			allAttractions = mapper.readValue(response.body(), new TypeReference<List<Attraction>>(){ });
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		*/
-		//List<Attraction> allAttractions = gpsService.getAttractions();
 		TreeMap<Double, NearbyAttraction> treeAttractionDistance = new TreeMap<>();
 		allAttractions.forEach(attraction -> treeAttractionDistance.put(rewardsService.getDistance(attraction, visitedLocation.location), new NearbyAttraction(attraction.attractionName, new Location(attraction.latitude, attraction.longitude), visitedLocation.location, rewardsService.getDistance(attraction, visitedLocation.location), rewardsService.getRewardPoints(attraction, user))));
 		nearbyAttractions = treeAttractionDistance.values().stream()
