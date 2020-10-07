@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import tourGuide.domain.location.Attraction;
 import tourGuide.domain.location.Location;
 import tourGuide.domain.location.VisitedLocation;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@PropertySource("classpath:application.properties")
 public class RewardsService {
 	private Logger logger = LoggerFactory.getLogger(RewardsService.class);
 
@@ -31,19 +33,16 @@ public class RewardsService {
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
 
-	@Value("${service.gps.name}")
-	String gpsServiceName;
+	private final String gpsServiceName;
+	private final String gpsServicePort;
+	private final String rewardsServiceName;
+	private final String rewardsServicePort;
 
-	@Value("${service.gps.port}")
-	String gpsServicePort;
-
-	@Value("${service.rewards.name}")
-	String rewardsServiceName;
-
-	@Value("${service.rewards.port}")
-	String rewardsServicePort;
-
-	public RewardsService() {
+	public RewardsService(@Value("${service.gps.name}") String gpsServiceName, @Value("${service.gps.port}") String gpsServicePort, @Value("${service.rewards.name}") String rewardsServiceName, @Value("${service.rewards.port}") String rewardsServicePort) {
+		this.gpsServiceName=gpsServiceName;
+		this.gpsServicePort=gpsServicePort;
+		this.rewardsServiceName=rewardsServiceName;
+		this.rewardsServicePort=rewardsServicePort;
 	}
 
 	public void setProximityBuffer(int proximityBuffer) {
@@ -60,29 +59,7 @@ public class RewardsService {
 		List<VisitedLocation> userLocations = user.getVisitedLocations();
 
 		List<Attraction> attractions = allAttractions;
-		//List<Attraction> attractions = getAllAttractions();
-		/*
-		List<Attraction> attractions = new ArrayList<>();
 
-		logger.debug("Request getAttractions build");
-		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://localhost:8081/getAttractions";
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(requestURI))
-				.GET()
-				.build();
-		try {
-			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			logger.debug("Status code = " + response.statusCode());
-			logger.debug("Response Body = " + response.body());
-			ObjectMapper mapper = new ObjectMapper();
-			attractions = mapper.readValue(response.body(), new TypeReference<List<Attraction>>(){ });
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		*/
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
 				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
