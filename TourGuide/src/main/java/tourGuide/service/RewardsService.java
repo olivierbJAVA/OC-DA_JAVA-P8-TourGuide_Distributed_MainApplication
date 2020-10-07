@@ -62,7 +62,7 @@ public class RewardsService {
 
 		for(VisitedLocation visitedLocation : userLocations) {
 			for(Attraction attraction : attractions) {
-				if(user.getUserRewards().stream().filter(r -> r.attraction.attractionName.equals(attraction.attractionName)).count() == 0) {
+				if(user.getUserRewards().stream().filter(r -> r.getAttraction().getAttractionName().equals(attraction.getAttractionName())).count() == 0) {
 					if(nearAttraction(visitedLocation, attraction)) {
 						user.addUserReward(new UserReward(visitedLocation, attraction, getRewardPoints(attraction, user)));
 					}
@@ -101,7 +101,7 @@ public class RewardsService {
 
 		logger.debug("Request getRewardPoints build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://"+rewardsServiceName+":"+rewardsServicePort+"/getRewardPoints?attractionId=" + attraction.attractionId + "&userId=" + user.getUserId();
+		String requestURI = "http://"+rewardsServiceName+":"+rewardsServicePort+"/getRewardPoints?attractionId=" + attraction.getAttractionId() + "&userId=" + user.getUserId();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
 				.GET()
@@ -124,14 +124,14 @@ public class RewardsService {
 	}
 
 	public boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
-		return getDistance(attraction, visitedLocation.location) > proximityBuffer ? false : true;
+		return getDistance(attraction, visitedLocation.getLocation()) > proximityBuffer ? false : true;
 	}
 
 	public double getDistance(Location loc1, Location loc2) {
-        double lat1 = Math.toRadians(loc1.latitude);
-        double lon1 = Math.toRadians(loc1.longitude);
-        double lat2 = Math.toRadians(loc2.latitude);
-        double lon2 = Math.toRadians(loc2.longitude);
+        double lat1 = Math.toRadians(loc1.getLatitude());
+        double lon1 = Math.toRadians(loc1.getLongitude());
+        double lat2 = Math.toRadians(loc2.getLatitude());
+        double lon2 = Math.toRadians(loc2.getLongitude());
 
         double angle = Math.acos(Math.sin(lat1) * Math.sin(lat2)
                                + Math.cos(lat1) * Math.cos(lat2) * Math.cos(lon1 - lon2));
