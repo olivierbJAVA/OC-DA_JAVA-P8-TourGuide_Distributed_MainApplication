@@ -14,6 +14,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import tourGuide.configuration.TourGuideInitialization;
@@ -37,6 +38,18 @@ public class TourGuideService {
 
 	//@Autowired
 	private TourGuideInitialization init = new TourGuideInitialization();
+
+	@Value("${service.gps.name}")
+	String gpsServiceName;
+
+	@Value("${service.gps.port}")
+	String gpsServicePort;
+
+	@Value("${service.preferences.name}")
+	String preferencesServiceName;
+
+	@Value("${service.preferences.port}")
+	String preferencesServicePort;
 
 	public TourGuideService(RewardsService rewardsService) {
 		this.rewardsService = rewardsService;
@@ -90,7 +103,7 @@ public class TourGuideService {
 
 		logger.debug("Request getTripDeals build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://preferences:8083/getPrice?apiKey=" + TourGuideInitialization.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
+		String requestURI = "http://"+preferencesServiceName+":"+preferencesServicePort+"/getPrice?apiKey=" + TourGuideInitialization.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
 
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
@@ -118,7 +131,7 @@ public class TourGuideService {
 
 		logger.debug("Request getUserLocation build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://gps:8081/getUserLocation?userId=" + user.getUserId();
+		String requestURI = "http://"+gpsServiceName+":"+gpsServicePort+"/getUserLocation?userId=" + user.getUserId();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
 				//.header("userId", user.getUserId().toString())
