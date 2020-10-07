@@ -61,7 +61,7 @@ public class TestTourGuideService {
 		VisitedLocation visitedLocation = tourGuideService.getUserLocation(user);
 
 		// ASSERT
-		assertTrue(visitedLocation.userId.equals(user.getUserId()));
+		assertTrue(visitedLocation.getUserId().equals(user.getUserId()));
 	}
 
 	@Test
@@ -183,7 +183,7 @@ public class TestTourGuideService {
 		VisitedLocation visitedLocation = tourGuideService.trackUserLocation(user);
 		
 		// ASSERT
-		assertEquals(user.getUserId(), visitedLocation.userId);
+		assertEquals(user.getUserId(), visitedLocation.getUserId());
 	}
 
 	@Test
