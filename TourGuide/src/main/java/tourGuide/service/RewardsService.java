@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import tourGuide.domain.location.Attraction;
 import tourGuide.domain.location.Location;
 import tourGuide.domain.location.VisitedLocation;
@@ -29,6 +30,18 @@ public class RewardsService {
     private int defaultProximityBuffer = 10;
 	private int proximityBuffer = defaultProximityBuffer;
 	private int attractionProximityRange = 200;
+
+	@Value("${service.gps.name}")
+	String gpsServiceName;
+
+	@Value("${service.gps.port}")
+	String gpsServicePort;
+
+	@Value("${service.rewards.name}")
+	String rewardsServiceName;
+
+	@Value("${service.rewards.port}")
+	String rewardsServicePort;
 
 	public RewardsService() {
 	}
@@ -86,7 +99,8 @@ public class RewardsService {
 
 		logger.debug("Request getAttractions build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://gps:8081/getAttractions";
+
+		String requestURI = "http://"+gpsServiceName+":"+gpsServicePort+"/getAttractions";
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
 				.GET()
@@ -110,7 +124,7 @@ public class RewardsService {
 
 		logger.debug("Request getRewardPoints build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://rewards:8082/getRewardPoints?attractionId=" + attraction.attractionId + "&userId=" + user.getUserId();
+		String requestURI = "http://"+rewardsServiceName+":"+rewardsServicePort+"/getRewardPoints?attractionId=" + attraction.attractionId + "&userId=" + user.getUserId();
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
 				.GET()
