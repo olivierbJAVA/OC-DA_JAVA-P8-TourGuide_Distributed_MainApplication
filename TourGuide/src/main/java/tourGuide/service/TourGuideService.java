@@ -90,7 +90,7 @@ public class TourGuideService {
 	public HashMap<String, Location> getAllCurrentLocations() {
 		HashMap<String, Location> allCurrentLocations = new HashMap<>();
 		List<User> allUsers = getAllUsers();
-		allUsers.forEach(user -> allCurrentLocations.put(user.getUserId().toString(), user.getLastVisitedLocation().location));
+		allUsers.forEach(user -> allCurrentLocations.put(user.getUserId().toString(), user.getLastVisitedLocation().getLocation()));
 		return allCurrentLocations;
 	}
 
@@ -169,7 +169,7 @@ public class TourGuideService {
 		List<Attraction> allAttractions = rewardsService.getAllAttractions();
 
 		TreeMap<Double, NearbyAttraction> treeAttractionDistance = new TreeMap<>();
-		allAttractions.forEach(attraction -> treeAttractionDistance.put(rewardsService.getDistance(attraction, visitedLocation.location), new NearbyAttraction(attraction.attractionName, new Location(attraction.latitude, attraction.longitude), visitedLocation.location, rewardsService.getDistance(attraction, visitedLocation.location), rewardsService.getRewardPoints(attraction, user))));
+		allAttractions.forEach(attraction -> treeAttractionDistance.put(rewardsService.getDistance(attraction, visitedLocation.getLocation()), new NearbyAttraction(attraction.getAttractionName(), new Location(attraction.getLatitude(), attraction.getLongitude()), visitedLocation.getLocation(), rewardsService.getDistance(attraction, visitedLocation.getLocation()), rewardsService.getRewardPoints(attraction, user))));
 		nearbyAttractions = treeAttractionDistance.values().stream()
 															.limit(5)
 															.collect(Collectors.toList());
