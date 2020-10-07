@@ -12,9 +12,9 @@ public class VisitedLocation {
 
     //@JsonSerialize(using= UUIDSerializer.class)
     //@JsonDeserialize(using= UUIDDeserializer.class)
-    public UUID userId;
-    public Location location;
-    public Date timeVisited;
+    private UUID userId;
+    private Location location;
+    private Date timeVisited;
 
     public VisitedLocation(UUID userId, Location location, Date timeVisited) {
         this.userId = userId;
@@ -23,5 +23,29 @@ public class VisitedLocation {
     }
 
     public VisitedLocation() {
+    }
+
+    public UUID getUserId() {
+        return userId;
+    }
+
+    public void setUserId(UUID userId) {
+        this.userId = userId;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
+    }
+
+    public Date getTimeVisited() {
+        return timeVisited;
+    }
+
+    public void setTimeVisited(Date timeVisited) {
+        this.timeVisited = timeVisited;
     }
 }
