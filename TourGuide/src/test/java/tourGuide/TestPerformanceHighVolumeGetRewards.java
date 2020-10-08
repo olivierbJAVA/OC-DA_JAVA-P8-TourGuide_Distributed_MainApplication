@@ -84,7 +84,6 @@ public class TestPerformanceHighVolumeGetRewards {
 		TourGuideService mockTourGuideService = Mockito.spy(tourGuideService);
 		doReturn(visitedLocationRandom).when(mockTourGuideService).trackUserLocation(any(User.class));
 		mockTourGuideService.tracker.stopTracking();
-		//Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
 		List<User> allUsers = mockTourGuideService.getAllUsers();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();

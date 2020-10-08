@@ -64,7 +64,6 @@ public class TestRewardsService {
 
 		// ASSERT
 		List<UserReward> userRewards = user.getUserRewards();
-
 		assertEquals(1, userRewards.size());
 	}
 	
@@ -72,7 +71,6 @@ public class TestRewardsService {
 	public void isWithinAttractionProximity() {
 		// ARRANGE
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
-
 		Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
 
 		// ACT & ASSERT
@@ -85,7 +83,6 @@ public class TestRewardsService {
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
 		Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
-
 		VisitedLocation visitedLocationRandom = new VisitedLocation(UUID.randomUUID(), new Location(TourGuideTestUtil.generateRandomLatitude(), TourGuideTestUtil.generateRandomLongitude()), TourGuideTestUtil.getRandomTime());
 
 		// ACT & ASSERT

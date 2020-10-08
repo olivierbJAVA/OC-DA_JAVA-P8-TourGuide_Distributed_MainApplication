@@ -54,7 +54,6 @@ public class TestTourGuideService {
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
 		// ACT
@@ -176,7 +175,6 @@ public class TestTourGuideService {
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
 		// ACT
@@ -198,11 +196,9 @@ public class TestTourGuideService {
 		tourGuideService.tracker.stopTracking();
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-
 		VisitedLocation visitedLocation = new VisitedLocation(user.getUserId(), new Location(47.305969D, 71.710449D), new Date());
 
 		List<NearbyAttraction> nearbyAttractionsExpected = new ArrayList<>();
-
 		NearbyAttraction nearbyAttraction1 = new NearbyAttraction("McKinley Tower", new Location(61.218887D, -149.877502D), new Location(47.305969D, 71.710449D), 4586.179236787266D, rewardsService.getRewardPoints(new Attraction("McKinley Tower", "Anchorage", "AK", 61.218887D, -149.877502D), user));
 		NearbyAttraction nearbyAttraction2 = new NearbyAttraction("Franklin Park Zoo", new Location(42.302601D, -71.086731D), new Location(47.305969D, 71.710449D), 5836.916287407119D, rewardsService.getRewardPoints(new Attraction("Franklin Park Zoo", "Boston", "MA", 42.302601D, -71.086731D), user));
 		NearbyAttraction nearbyAttraction3 = new NearbyAttraction("Bronx Zoo", new Location(40.852905D, -73.872971D), new Location(47.305969D, 71.710449D), 5985.996919050997D, rewardsService.getRewardPoints(new Attraction("Bronx Zoo", "Bronx", "NY", 40.852905D, -73.872971D), user));
@@ -219,7 +215,6 @@ public class TestTourGuideService {
 
 		// ASSERT
 		assertEquals(5, nearbyAttractionsActual.size());
-
 		for (int j=0; j<5; j++) {
 			assertEquals(nearbyAttractionsExpected.get(j).getAttractionName(), nearbyAttractionsActual.get(j).getAttractionName());
 		}
@@ -232,7 +227,6 @@ public class TestTourGuideService {
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
 		// ACT
