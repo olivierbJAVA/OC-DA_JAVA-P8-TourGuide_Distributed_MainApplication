@@ -1,17 +1,10 @@
 package tourGuide.domain.location;
 
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.databind.deser.std.UUIDDeserializer;
-import com.fasterxml.jackson.databind.ser.std.UUIDSerializer;
-
 import java.util.Date;
 import java.util.UUID;
 
 public class VisitedLocation {
 
-    //@JsonSerialize(using= UUIDSerializer.class)
-    //@JsonDeserialize(using= UUIDDeserializer.class)
     private UUID userId;
     private Location location;
     private Date timeVisited;

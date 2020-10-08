@@ -95,13 +95,13 @@ public class TourGuideService {
 	}
 
 	public List<Provider> getTripDeals(User user) {
-		int cumulatativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
+		int cumulativeRewardPoints = user.getUserRewards().stream().mapToInt(i -> i.getRewardPoints()).sum();
 
 		List<Provider> providers = new ArrayList<>();
 
 		logger.debug("Request getTripDeals build");
 		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://"+preferencesServiceName+":"+preferencesServicePort+"/getPrice?apiKey=" + TourGuideInitialization.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulatativeRewardPoints;
+		String requestURI = "http://"+preferencesServiceName+":"+preferencesServicePort+"/getPrice?apiKey=" + TourGuideInitialization.getTripPricerApiKey() + "&attractionId=" + user.getUserId() + "&adults=" + user.getUserPreferences().getNumberOfAdults() + "&children=" + user.getUserPreferences().getNumberOfChildren() + "&nightsStay=" + user.getUserPreferences().getTripDuration() + "&rewardsPoints=" + cumulativeRewardPoints;
 
 		HttpRequest request = HttpRequest.newBuilder()
 				.uri(URI.create(requestURI))
