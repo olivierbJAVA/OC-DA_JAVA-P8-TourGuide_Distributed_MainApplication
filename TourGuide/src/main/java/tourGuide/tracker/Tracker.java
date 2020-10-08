@@ -120,7 +120,7 @@ public class Tracker extends Thread {
 
 			//Optional : in case you want to wait for the completion of track users and calculate rewards before Tracker sleeping
 			//Wait maximum between Timeout and forkJoinPool has finished tasks
-			//forkJoinPool.awaitQuiescence(10,TimeUnit.MINUTES);
+			forkJoinPool.awaitQuiescence(10,TimeUnit.MINUTES);
 
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
