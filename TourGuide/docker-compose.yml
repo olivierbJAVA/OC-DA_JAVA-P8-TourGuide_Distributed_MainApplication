@@ -1,0 +1,47 @@
+version: '3.7'
+
+services:
+    gps:
+        image: gps
+        container_name: gps
+        restart: always
+        ports:
+            - 8081:8081
+        networks:
+            - tg-net
+
+    rewards:
+        image: rewards
+        container_name: rewards
+        restart: always
+        ports:
+            - 8082:8082
+        networks:
+            - tg-net
+
+    preferences:
+        image: preferences
+        container_name: preferences
+        restart: always
+        ports:
+            - 8083:8083
+        networks:
+            - tg-net
+
+    tourguide:
+        image: tourguide
+        container_name: tourguide
+        restart: always
+        ports:
+            - 8080:8080
+        networks:
+            - tg-net
+        depends_on:
+            - gps
+            - rewards
+            - preferences
+
+networks:
+  tg-net:
+      driver: bridge
+      
