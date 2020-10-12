@@ -49,15 +49,10 @@ public class TestRewardsService {
 
 		// ARRANGE
 		InternalTestHelper.setInternalUserNumber(0);
-
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		List<Attraction> allAttractions = rewardsService.getAllAttractions();
-		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
-		tourGuideService.tracker.stopTracking();
-
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
-		Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
-		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), attraction, new Date()));
+		user.addToVisitedLocations(new VisitedLocation(user.getUserId(), allAttractions.get(0), new Date()));
 
 		// ACT
 		rewardsService.calculateRewards(user, allAttractions);
@@ -66,27 +61,17 @@ public class TestRewardsService {
 		List<UserReward> userRewards = user.getUserRewards();
 		assertEquals(1, userRewards.size());
 	}
-	
-	@Test
-	public void isWithinAttractionProximity() {
-		// ARRANGE
-		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
-		Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
-
-		// ACT & ASSERT
-		assertTrue(rewardsService.isWithinAttractionProximity(attraction, attraction));
-	}
 
 	@Test
 	public void nearAttraction() {
 		// ARRANGE
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		rewardsService.setProximityBuffer(Integer.MAX_VALUE);
-		Attraction attraction = new Attraction("Disneyland", "Anaheim", "CA", 33.817595D, -117.922008D);
+		List<Attraction> allAttractions = rewardsService.getAllAttractions();
 		VisitedLocation visitedLocationRandom = new VisitedLocation(UUID.randomUUID(), new Location(TourGuideTestUtil.generateRandomLatitude(), TourGuideTestUtil.generateRandomLongitude()), TourGuideTestUtil.getRandomTime());
 
 		// ACT & ASSERT
-		assertTrue(rewardsService.nearAttraction(visitedLocationRandom, attraction));
+		assertTrue(rewardsService.nearAttraction(visitedLocationRandom, allAttractions.get(0)));
 	}
 
 	@Test

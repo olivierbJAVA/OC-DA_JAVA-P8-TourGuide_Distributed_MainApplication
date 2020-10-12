@@ -104,19 +104,14 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
 
-		User user1 = new User(UUID.randomUUID(), "jon1", "000", "jon1@tourGuide.com");
-		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
-
-		tourGuideService.addUser(user1);
-		tourGuideService.addUser(user2);
+		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
+		tourGuideService.addUser(user);
 
 		// ACT
-		User retrievedUser1 = tourGuideService.getUser(user1.getUserName());
-		User retrievedUser2 = tourGuideService.getUser(user2.getUserName());
+		User retrievedUser = tourGuideService.getUser(user.getUserName());
 
 		// ASSERT
-		assertEquals(user1, retrievedUser1);
-		assertEquals(user2, retrievedUser2);
+		assertEquals(user, retrievedUser);
 	}
 
 	@Test
@@ -127,19 +122,14 @@ public class TestTourGuideService {
 		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
 		tourGuideService.tracker.stopTracking();
 
-		User user1 = new User(UUID.randomUUID(), "jon1", "000", "jon1@tourGuide.com");
-		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
+		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 
 		// ACT
-		tourGuideService.addUser(user1);
-		tourGuideService.addUser(user2);
+		tourGuideService.addUser(user);
 
 		// ASSERT
-		User retrievedUser1 = tourGuideService.getUser(user1.getUserName());
-		User retrievedUser2 = tourGuideService.getUser(user2.getUserName());
-
-		assertEquals(user1, retrievedUser1);
-		assertEquals(user2, retrievedUser2);
+		User retrievedUser = tourGuideService.getUser(user.getUserName());
+		assertEquals(user, retrievedUser);
 	}
 
 	@Test
@@ -152,17 +142,20 @@ public class TestTourGuideService {
 
 		User user1 = new User(UUID.randomUUID(), "jon1", "000", "jon1@tourGuide.com");
 		User user2 = new User(UUID.randomUUID(), "jon2", "000", "jon2@tourGuide.com");
+		User user3 = new User(UUID.randomUUID(), "jon3", "000", "jon3@tourGuide.com");
 
 		tourGuideService.addUser(user1);
 		tourGuideService.addUser(user2);
+		tourGuideService.addUser(user3);
 
 		// ACT
 		List<User> allUsers = tourGuideService.getAllUsers();
 
 		// ASSERT
-		assertEquals(2, allUsers.size());
+		assertEquals(3, allUsers.size());
 		assertTrue(allUsers.contains(user1));
 		assertTrue(allUsers.contains(user2));
+		assertTrue(allUsers.contains(user3));
 	}
 	
 	@Test
@@ -215,8 +208,8 @@ public class TestTourGuideService {
 
 		// ASSERT
 		assertEquals(5, nearbyAttractionsActual.size());
-		for (int j=0; j<5; j++) {
-			assertEquals(nearbyAttractionsExpected.get(j).getAttractionName(), nearbyAttractionsActual.get(j).getAttractionName());
+		for (int i=0; i<5; i++) {
+			assertEquals(nearbyAttractionsExpected.get(i).getAttractionName(), nearbyAttractionsActual.get(i).getAttractionName());
 		}
 	}
 
@@ -249,12 +242,11 @@ public class TestTourGuideService {
 		userPreferences.setAttractionProximity(1000);
 		userPreferences.setCurrency("USD");
 		userPreferences.setLowerPricePoint(0D);
-		userPreferences.setHighPricePoint(1000000D);
+		userPreferences.setHighPricePoint(10000D);
 		userPreferences.setTripDuration(5);
 		userPreferences.setTicketQuantity(3);
 		userPreferences.setNumberOfAdults(2);
 		userPreferences.setNumberOfChildren(1);
-
 		user.setUserPreferences(userPreferences);
 
 		// ACT
@@ -277,7 +269,7 @@ public class TestTourGuideService {
 		userPreferences.setAttractionProximity(1000);
 		userPreferences.setCurrency("USD");
 		userPreferences.setLowerPricePoint(0D);
-		userPreferences.setHighPricePoint(1000000D);
+		userPreferences.setHighPricePoint(10000D);
 		userPreferences.setTripDuration(5);
 		userPreferences.setTicketQuantity(3);
 		userPreferences.setNumberOfAdults(2);

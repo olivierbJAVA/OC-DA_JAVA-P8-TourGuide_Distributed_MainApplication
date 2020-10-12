@@ -75,7 +75,7 @@ public class TestPerformanceHighVolumeGetRewards {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 20 minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(10000);
 
 		RewardsService rewardsService = new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort);
 		TourGuideService tourGuideService = new TourGuideService(rewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
@@ -83,8 +83,9 @@ public class TestPerformanceHighVolumeGetRewards {
 		VisitedLocation visitedLocationRandom = new VisitedLocation(UUID.randomUUID(), new Location(TourGuideTestUtil.generateRandomLatitude(), TourGuideTestUtil.generateRandomLongitude()), TourGuideTestUtil.getRandomTime());
 		TourGuideService mockTourGuideService = Mockito.spy(tourGuideService);
 		doReturn(visitedLocationRandom).when(mockTourGuideService).trackUserLocation(any(User.class));
-		mockTourGuideService.tracker.stopTracking();
 		List<User> allUsers = mockTourGuideService.getAllUsers();
+		//mockTourGuideService.tracker.stopTracking();
+		tourGuideService.tracker.stopTracking();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -98,7 +99,8 @@ public class TestPerformanceHighVolumeGetRewards {
 		});
 		boolean result = forkJoinPool.awaitQuiescence(20,TimeUnit.MINUTES);
 		stopWatch.stop();
-		//forkJoinPool.shutdown();
+		//mockTourGuideService.tracker.stopTracking();
+		forkJoinPool.shutdown();
 
 		// ASSERT
 		for(User user : allUsers) {

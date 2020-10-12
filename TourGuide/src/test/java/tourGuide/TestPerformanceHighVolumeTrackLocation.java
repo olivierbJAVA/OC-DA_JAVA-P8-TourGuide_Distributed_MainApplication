@@ -74,14 +74,14 @@ public class TestPerformanceHighVolumeTrackLocation {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper.setInternalUserNumber(100);
+		InternalTestHelper.setInternalUserNumber(10000);
 
 		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort));
 		List<Attraction> allAttractions = mockRewardsService.getAllAttractions();
 		doNothing().when(mockRewardsService).calculateRewards(any(User.class), ArgumentMatchers.anyList());
 		TourGuideService tourGuideService = new TourGuideService(mockRewardsService, gpsServiceName, gpsServicePort, preferencesServiceName, preferencesServicePort);
-		tourGuideService.tracker.stopTracking();
 		List<User> allUsers = tourGuideService.getAllUsers();
+		tourGuideService.tracker.stopTracking();
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
 
@@ -94,7 +94,7 @@ public class TestPerformanceHighVolumeTrackLocation {
 		});
 		boolean result = forkJoinPool.awaitQuiescence(15,TimeUnit.MINUTES);
 		stopWatch.stop();
-		//forkJoinPool.shutdownNow();
+		forkJoinPool.shutdown();
 
 		// ASSERT
 		System.out.println("highVolumeTrackLocation: Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds.");
