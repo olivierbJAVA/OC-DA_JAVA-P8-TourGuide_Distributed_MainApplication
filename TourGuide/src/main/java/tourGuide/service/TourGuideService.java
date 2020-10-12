@@ -12,7 +12,6 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Service;
@@ -33,12 +32,11 @@ import tourGuide.domain.tripdeal.Provider;
 public class TourGuideService {
 	private Logger logger = LoggerFactory.getLogger(TourGuideService.class);
 
-	//@Autowired
 	TourGuideInitialization init = new TourGuideInitialization();
 
 	private final RewardsService rewardsService;
 	public final Tracker tracker;
-	boolean testMode = true;
+	private boolean testMode = true;
 
 	private final String gpsServiceName;
 	private final String gpsServicePort;
@@ -74,6 +72,48 @@ public class TourGuideService {
 		if(!init.getInternalUserMap().containsKey(user.getUserName())) {
 			init.getInternalUserMap().put(user.getUserName(), user);
 		}
+	}
+
+	public VisitedLocation trackUserLocation(User user) {
+		logger.debug("Track Location - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
+
+		VisitedLocation visitedLocation = new VisitedLocation();
+
+		logger.debug("Request getUserLocation build");
+		HttpClient client = HttpClient.newHttpClient();
+		String requestURI = "http://"+gpsServiceName+":"+gpsServicePort+"/getUserLocation?userId=" + user.getUserId();
+		HttpRequest request = HttpRequest.newBuilder()
+				.uri(URI.create(requestURI))
+				//.header("userId", user.getUserId().toString())
+				.GET()
+				.build();
+
+		// Essai sendAsync
+		/*
+		try {
+			CompletableFuture<HttpResponse <String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+			ObjectMapper mapper = new ObjectMapper();
+			visitedLocation = mapper.readValue(response.get().body(), VisitedLocation.class);
+		} catch (IOException | InterruptedException | ExecutionException e) {
+			logger.error(e.toString());
+			e.printStackTrace();
+		}
+		*/
+
+		try {
+			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			logger.debug("Status code = " + response.statusCode());
+			logger.debug("Response Body = " + response.body());
+			ObjectMapper mapper = new ObjectMapper();
+			visitedLocation = mapper.readValue(response.body(), VisitedLocation.class);
+		} catch (IOException | InterruptedException e) {
+			logger.error(e.toString());
+			e.printStackTrace();
+		}
+
+		user.addToVisitedLocations(visitedLocation);
+
+		return visitedLocation;
 	}
 
 	public List<UserReward> getUserRewards(User user) {
@@ -122,48 +162,6 @@ public class TourGuideService {
 		return providers;
 	}
 
-	public VisitedLocation trackUserLocation(User user) {
-		logger.debug("Track Location - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
-
-		VisitedLocation visitedLocation = new VisitedLocation();
-
-		logger.debug("Request getUserLocation build");
-		HttpClient client = HttpClient.newHttpClient();
-		String requestURI = "http://"+gpsServiceName+":"+gpsServicePort+"/getUserLocation?userId=" + user.getUserId();
-		HttpRequest request = HttpRequest.newBuilder()
-				.uri(URI.create(requestURI))
-				//.header("userId", user.getUserId().toString())
-				.GET()
-				.build();
-
-		// Essai sendAsync
-		/*
-		try {
-			CompletableFuture<HttpResponse <String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-			ObjectMapper mapper = new ObjectMapper();
-			visitedLocation = mapper.readValue(response.get().body(), VisitedLocation.class);
-		} catch (IOException | InterruptedException | ExecutionException e) {
-			logger.error(e.toString());
-			e.printStackTrace();
-		}
-		*/
-
-		try {
-			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
-			logger.debug("Status code = " + response.statusCode());
-			logger.debug("Response Body = " + response.body());
-			ObjectMapper mapper = new ObjectMapper();
-			visitedLocation = mapper.readValue(response.body(), VisitedLocation.class);
-		} catch (IOException | InterruptedException e) {
-			logger.error(e.toString());
-			e.printStackTrace();
-		}
-
-		user.addToVisitedLocations(visitedLocation);
-
-		return visitedLocation;
-	}
-
 	public List<NearbyAttraction> getNearByAttractions(VisitedLocation visitedLocation, User user) {
 		List<NearbyAttraction> nearbyAttractions = new ArrayList<>();
 		List<Attraction> allAttractions = rewardsService.getAllAttractions();
@@ -188,10 +186,6 @@ public class TourGuideService {
 	}
 
 	private void addShutDownHook() {
-		Runtime.getRuntime().addShutdownHook(new Thread() { 
-		      public void run() {
-		        tracker.stopTracking();
-		      } 
-		    }); 
+		Runtime.getRuntime().addShutdownHook(new Thread(tracker::stopTracking));
 	}
 }
