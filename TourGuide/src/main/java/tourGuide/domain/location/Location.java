@@ -1,6 +1,7 @@
 package tourGuide.domain.location;
 
 public class Location {
+
     private double longitude;
     private double latitude;
 

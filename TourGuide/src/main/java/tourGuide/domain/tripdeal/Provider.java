@@ -3,6 +3,7 @@ package tourGuide.domain.tripdeal;
 import java.util.UUID;
 
 public class Provider {
+
     private String name;
     private double price;
     private UUID tripId;

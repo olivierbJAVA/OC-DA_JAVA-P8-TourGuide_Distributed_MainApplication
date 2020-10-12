@@ -3,6 +3,7 @@ package tourGuide.domain.location;
 import java.util.UUID;
 
 public class Attraction extends Location {
+
     private String attractionName;
     private String city;
     private String state;

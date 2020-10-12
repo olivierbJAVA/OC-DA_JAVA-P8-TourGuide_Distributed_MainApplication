@@ -9,6 +9,7 @@ import tourGuide.domain.location.VisitedLocation;
 import tourGuide.domain.tripdeal.Provider;
 
 public class User {
+
 	private final UUID userId;
 	private final String userName;
 	private String phoneNumber;
