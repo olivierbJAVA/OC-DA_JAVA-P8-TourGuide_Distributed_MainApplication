@@ -1,4 +1,4 @@
-# TourGuide
+# TourGuide - Main application
 Welcome to TourGuide !
 
 TourGuide is part of the TripMaster company applications portfolio
