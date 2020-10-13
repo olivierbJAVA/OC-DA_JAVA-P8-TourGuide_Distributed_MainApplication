@@ -21,11 +21,11 @@ This version is a splitted version of the monolithic TourGuide application avail
 
 >Please note that Java has been upgraded from version 8 to version 11 (and Gradle from version 4.5.1 to 6.1.1) in order to use the most up to date version of the Java HttpClient used on the client side for communication between Microservices.
 
-Being a distributed application, this version is composed of 4 parts (4 Microservices) :
+Being a distributed application, this version is composed of 4 parts (*4 Microservices*) :
 - TourGuide Application : the main application using the below services 
-- GPS Service : in charge of the services linked to localisation
-- Preferences Service : in charge of the services linked to deals furnished to the users and depending on their travel preferences 
-- Rewards Service : in charge of the services linked to rewards computation
+- GPS Service : in charge of the services related to localisation
+- Preferences Service : in charge of the services related to trip deals proposed to the users and depending on their travel preferences 
+- Rewards Service : in charge of the services related to rewards computation
 
 Technologies used for each Microservice are the following :
 - Java is used as programming language
@@ -130,7 +130,7 @@ A Dockerfile is present in this repository in order to deploy the application in
 You can deploy each of the GPS, Rewards and Preferences Services in a Docker container as well (please see instructions in their dedicated repositories).
 
 When you have 4 Docker Images for the 4 parts of the application, you can run all these 4 parts of the whole application using the *docker-compose.yml* file present in this repository.
->To do this, please use the following commend line (in the *docker-compose.yml* directory)
+>To do this, please use the following commend line (in the *docker-compose.yml* directory) :
 `docker-compose up -d`
  
 This will launch the 4 Microservices and create a dedicated Docker bridge network to enable their communication. 
