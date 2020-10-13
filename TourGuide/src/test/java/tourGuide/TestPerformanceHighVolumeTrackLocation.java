@@ -74,7 +74,7 @@ public class TestPerformanceHighVolumeTrackLocation {
 
 		// ARRANGE
 		// Users should be incremented up to 100,000, and test finishes within 15 minutes
-		InternalTestHelper.setInternalUserNumber(10000);
+		InternalTestHelper.setInternalUserNumber(100);
 
 		RewardsService mockRewardsService = Mockito.spy(new RewardsService(gpsServiceName, gpsServicePort, rewardsServiceName, rewardsServicePort));
 		List<Attraction> allAttractions = mockRewardsService.getAllAttractions();

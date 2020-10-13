@@ -239,16 +239,17 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		UserPreferences userPreferences = new UserPreferences();
+		userPreferences.setTripDuration(5);
+		userPreferences.setNumberOfAdults(2);
+		userPreferences.setNumberOfChildren(1);
+		user.setUserPreferences(userPreferences);
+		/*
 		userPreferences.setAttractionProximity(1000);
 		userPreferences.setCurrency("USD");
 		userPreferences.setLowerPricePoint(0D);
 		userPreferences.setHighPricePoint(10000D);
-		userPreferences.setTripDuration(5);
 		userPreferences.setTicketQuantity(3);
-		userPreferences.setNumberOfAdults(2);
-		userPreferences.setNumberOfChildren(1);
-		user.setUserPreferences(userPreferences);
-
+		*/
 		// ACT
 		UserPreferences userPreferencesRetrieved = tourGuideService.getUserPreferences(user);
 
@@ -266,14 +267,17 @@ public class TestTourGuideService {
 
 		User user = new User(UUID.randomUUID(), "jon", "000", "jon@tourGuide.com");
 		UserPreferences userPreferences = new UserPreferences();
+		userPreferences.setTripDuration(5);
+		userPreferences.setNumberOfAdults(2);
+		userPreferences.setNumberOfChildren(1);
+		user.setUserPreferences(userPreferences);
+		/*
 		userPreferences.setAttractionProximity(1000);
 		userPreferences.setCurrency("USD");
 		userPreferences.setLowerPricePoint(0D);
 		userPreferences.setHighPricePoint(10000D);
-		userPreferences.setTripDuration(5);
 		userPreferences.setTicketQuantity(3);
-		userPreferences.setNumberOfAdults(2);
-		userPreferences.setNumberOfChildren(1);
+		*/
 
 		// ACT
 		tourGuideService.postUserPreferences(user, userPreferences);
