@@ -1,9 +1,9 @@
 # TourGuide - Main application
 Welcome to TourGuide !
 
-- TourGuide is part of the TripMaster company applications portfolio.
-- TourGuide is a web application which goal is help users to travel.
-- The application is working but with some issues.
+- TourGuide is part of the TripMaster company applications portfolio
+- TourGuide is a web application which goal is help users to travel
+- The application is working but with some issues
 
 The goal of this project is to : 
 - enhance the performance of the application
@@ -55,7 +55,7 @@ You need to install the following software :
 - Java 11
 - Gradle 6.6.1
 - Docker
->You don't need to install SpringBoot yourself because dependencies will be added by Gradle (Version of SpringBoot used is 2.1.6)
+>You don't need to install SpringBoot by yourself because dependencies will be added by Gradle (Version of SpringBoot used is 2.1.6)
 
 ### Installing
 
