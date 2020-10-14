@@ -1,9 +1,9 @@
 # TourGuide - Main application
 Welcome to TourGuide !
 
-TourGuide is part of the TripMaster company applications portfolio
-TourGuide is a web application which goal is help users to travel.
-The application is working but with some issues.
+- TourGuide is part of the TripMaster company applications portfolio.
+- TourGuide is a web application which goal is help users to travel.
+- The application is working but with some issues.
 
 The goal of this project is to : 
 - enhance the performance of the application
@@ -23,19 +23,19 @@ This version is a splitted version of the monolithic TourGuide application avail
 
 Being a distributed application, this version is composed of 4 parts (*4 Microservices*) :
 - TourGuide Application : the main application using the below services 
-- GPS Service : in charge of the services related to localisation
-- Preferences Service : in charge of the services related to trip deals proposed to the users and depending on their travel preferences 
-- Rewards Service : in charge of the services related to rewards computation
+- GPS Service : in charge of services related to localisation
+- Preferences Service : in charge of services related to trip deals proposed to users and depending on their travel preferences 
+- Rewards Service : in charge of services related to rewards computation
 
 Technologies used for each Microservice are the following :
 - Java is used as programming language
 - SpringBoot is used for the web application which is based on the MVC pattern
 - Server used is SpringBoot Tomcat embedded
-- Gradle is used to run the tests, build and package the application.
+- Gradle is used to run the tests, build and package the application
 - JUnit is used as tests engine
 - Mockito is used as mocking framework for tests
 
-Microservices communicate using REST APIs (Server side = Tomcat / Client side = Java HttpClient).
+Microservices communicate using REST APIs (Server side : Tomcat / Client side : Java HttpClient).
 
 ### TourGuide Application
 
@@ -54,8 +54,8 @@ You need to install the following software :
 
 - Java 11
 - Gradle 6.6.1
-- SpringBoot 2.3.0 (Spring WebMVC and Spring Test components)
 - Docker
+>You don't need to install SpringBoot yourself because dependencies will be added by Gradle (Version of SpringBoot used is 2.1.6)
 
 ### Installing
 
@@ -67,10 +67,7 @@ You will find below a step by step explanation that tell you how to get a develo
 2.Install Gradle :
 <https://gradle.org/install/>
 
-3.Install SpringBoot :
-<https://docs.spring.io/spring-boot/docs/current/reference/html/getting-started.html#getting-started-installing-spring-boot>
-
-4.Install Docker :
+3.Install Docker :
 <https://docs.docker.com/get-docker/>
 
 ### Application running
