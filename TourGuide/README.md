@@ -13,7 +13,6 @@ The goal of this project is to :
 
 For more information about the application, its functioning, the goals of this enhancement project and the results obtained, you can refer to the technical documentation attached in the repository.
 
-
 ### TourGuide Distributed version
 
 This version is a splitted version of the monolithic TourGuide application available in the following repository (most up to date branch = *develop*):
@@ -91,7 +90,6 @@ When the TourGuide Application is launched, by default it is initialized with a 
 You can modify the number of initial users using the *internalUserNumber* in the *InternalTestHelper* class.
 
 >You can disable this initialization by setting the *testMode* boolean in the *TourGuideService* class at false. 
-
 
 ### Endpoints
 
