@@ -5,6 +5,9 @@ import java.time.ZoneOffset;
 import java.util.Date;
 import java.util.Random;
 
+/**
+ * Class including util functions for the TourGuide application tests.
+ */
 public class TourGuideTestUtil {
 
     public static double generateRandomLongitude() {

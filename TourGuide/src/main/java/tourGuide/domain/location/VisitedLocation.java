@@ -3,6 +3,9 @@ package tourGuide.domain.location;
 import java.util.Date;
 import java.util.UUID;
 
+/**
+ * Class materializing a visiting location.
+ */
 public class VisitedLocation {
 
     private UUID userId;

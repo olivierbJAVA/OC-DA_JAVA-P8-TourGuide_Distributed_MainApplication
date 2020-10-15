@@ -2,6 +2,9 @@ package tourGuide.domain.location;
 
 import java.util.UUID;
 
+/**
+ * Class materializing an attraction.
+ */
 public class Attraction extends Location {
 
     private String attractionName;

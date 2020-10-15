@@ -26,6 +26,9 @@ import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.domain.user.User;
 
+/**
+ * Class including performance tests for the tracking user location of TourGuide application.
+ */
 public class TestPerformanceHighVolumeTrackLocation {
 
 	private static String gpsServiceName;

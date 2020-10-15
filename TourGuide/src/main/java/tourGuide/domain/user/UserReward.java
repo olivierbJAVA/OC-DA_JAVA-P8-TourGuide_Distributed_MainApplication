@@ -3,6 +3,9 @@ package tourGuide.domain.user;
 import tourGuide.domain.location.Attraction;
 import tourGuide.domain.location.VisitedLocation;
 
+/**
+ * Class materializing a user reward.
+ */
 public class UserReward {
 
 	private final VisitedLocation visitedLocation;

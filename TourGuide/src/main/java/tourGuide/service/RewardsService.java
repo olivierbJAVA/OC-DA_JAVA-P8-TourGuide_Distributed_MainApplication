@@ -21,6 +21,9 @@ import java.net.http.HttpResponse;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Class in charge of managing services linked to rewards for the TourGuide application.
+ */
 @Service
 @PropertySource("classpath:application.properties")
 public class RewardsService {
@@ -44,14 +47,27 @@ public class RewardsService {
 		this.rewardsServicePort=rewardsServicePort;
 	}
 
+	/**
+	 * Set the proximity buffer value.
+	 *
+	 * @param proximityBuffer The value of the proximity buffer
+	 */
 	public void setProximityBuffer(int proximityBuffer) {
 		this.proximityBuffer = proximityBuffer;
 	}
 
+	/**
+	 * Set the default proximity buffer value.
+	 */
 	public void setDefaultProximityBuffer() {
 		proximityBuffer = defaultProximityBuffer;
 	}
 
+	/**
+	 * Calculate and update the rewards for a user.
+	 *
+	 * @param user The user
+	 */
 	public void calculateRewards(User user, List<Attraction> allAttractions) {
 		logger.debug("Calculate Rewards - Thread : " + Thread.currentThread().getName() + " - User : " + user.getUserName());
 
@@ -68,6 +84,11 @@ public class RewardsService {
 		}
 	}
 
+	/**
+	 * Return the list of all attractions.
+	 *
+	 * @return The list of all attractions
+	 */
 	public List<Attraction> getAllAttractions(){
 		List<Attraction> attractions = new ArrayList<>();
 
@@ -93,6 +114,13 @@ public class RewardsService {
 		return attractions;
 	}
 
+	/**
+	 * Return the rewards points for an attraction and a given user.
+	 *
+	 * @param attraction The attraction
+	 * @param user The user
+	 * @return The number of rewards points earned
+	 */
 	public int getRewardPoints(Attraction attraction, User user) {
 		int rewardsPoint=0;
 
@@ -116,10 +144,24 @@ public class RewardsService {
 		return rewardsPoint;
 	}
 
+	/**
+	 * Indicate if a visited location is near an attraction for rewards computation.
+	 *
+	 * @param visitedLocation The visited location
+	 * @param attraction The attraction
+	 * @return True if the location is near the attraction, false if this is not the case
+	 */
 	public boolean nearAttraction(VisitedLocation visitedLocation, Attraction attraction) {
 		return getDistance(attraction, visitedLocation.getLocation()) > proximityBuffer ? false : true;
 	}
 
+	/**
+	 * Return the distance between 2 locations.
+	 *
+	 * @param loc1 The first location
+	 * @param loc2 The second location
+	 * @return The distance between the 2 locations
+	 */
 	public double getDistance(Location loc1, Location loc2) {
         double lat1 = Math.toRadians(loc1.getLatitude());
         double lon1 = Math.toRadians(loc1.getLongitude());

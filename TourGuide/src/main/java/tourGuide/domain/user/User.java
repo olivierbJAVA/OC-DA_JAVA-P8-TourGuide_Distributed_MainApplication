@@ -8,6 +8,9 @@ import java.util.UUID;
 import tourGuide.domain.location.VisitedLocation;
 import tourGuide.domain.tripdeal.Provider;
 
+/**
+ * Class materializing a user of the application.
+ */
 public class User {
 
 	private final UUID userId;

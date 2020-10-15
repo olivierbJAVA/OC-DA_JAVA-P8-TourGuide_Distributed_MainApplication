@@ -23,6 +23,9 @@ import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 import tourGuide.domain.user.User;
 
+/**
+ * Class including tests for the services of the TourGuide application.
+ */
 public class TestTourGuideService {
 
 	private static String gpsServiceName;

@@ -1,5 +1,8 @@
 package tourGuide.domain.location;
 
+/**
+ * Class materializing a nearby attraction.
+ */
 public class NearbyAttraction {
 
     private String attractionName;

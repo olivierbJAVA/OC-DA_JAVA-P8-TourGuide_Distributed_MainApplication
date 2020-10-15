@@ -13,6 +13,9 @@ import java.time.ZoneOffset;
 import java.util.*;
 import java.util.stream.IntStream;
 
+/**
+ * Class used for users initialization and testing purposes.
+ */
 public class TourGuideInitialization {
 
     /**********************************************************************************

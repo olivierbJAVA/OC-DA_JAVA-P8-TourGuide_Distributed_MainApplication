@@ -28,6 +28,9 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doReturn;
 
+/**
+ * Class including performance tests for the rewards calculation of TourGuide application.
+ */
 public class TestPerformanceHighVolumeGetRewards {
 
 	private static String gpsServiceName;

@@ -21,6 +21,9 @@ import tourGuide.domain.user.User;
 
 import utils.TourGuideTestUtil;
 
+/**
+ * Class including tests for the rewards service of the TourGuide application.
+ */
 public class TestRewardsService {
 
 	private static String gpsServiceName;

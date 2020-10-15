@@ -2,6 +2,9 @@ package tourGuide.domain.tripdeal;
 
 import java.util.UUID;
 
+/**
+ * Class materializing a provider of travel.
+ */
 public class Provider {
 
     private String name;

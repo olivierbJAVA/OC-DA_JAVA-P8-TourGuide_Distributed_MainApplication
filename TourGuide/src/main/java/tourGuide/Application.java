@@ -5,6 +5,9 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 import java.util.Locale;
 
+/**
+ * Class in charge of launching the TourGuide application.
+ */
 @SpringBootApplication
 public class Application {
 

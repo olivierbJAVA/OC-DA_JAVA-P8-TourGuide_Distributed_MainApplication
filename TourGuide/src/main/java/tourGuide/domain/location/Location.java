@@ -1,5 +1,8 @@
 package tourGuide.domain.location;
 
+/**
+ * Class materializing a location.
+ */
 public class Location {
 
     private double longitude;

@@ -12,6 +12,9 @@ import tourGuide.domain.user.User;
 import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
+/**
+ * Class managing the tracking of users, i.e. tracking of their location and update of rewards
+ */
 public class Tracker extends Thread {
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
 
@@ -37,7 +40,10 @@ public class Tracker extends Thread {
 		forkJoinPool.shutdown();
 		executorService.shutdown();
 	}
-	
+
+	/**
+	 * Thread performing the tracking of users, i.e. tracking of their location and update of rewards
+	 */
 	@Override
 	public void run() {
 		StopWatch stopWatch = new StopWatch();
