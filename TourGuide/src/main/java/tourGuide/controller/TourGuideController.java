@@ -15,6 +15,9 @@ import tourGuide.domain.user.UserReward;
 import tourGuide.service.TourGuideService;
 import tourGuide.domain.tripdeal.Provider;
 
+/**
+ * Controller in charge of managing the endpoints for the TourGuide application.
+ */
 @RestController
 public class TourGuideController {
 
