@@ -89,11 +89,11 @@ public class TestPerformanceHighVolumeTrackLocation {
 		stopWatch.start();
 
 		// ACT
-		ForkJoinPool forkJoinPool = new ForkJoinPool(100);// Tests : 10 & 200
+		ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 		allUsers.forEach((user)-> {
 			CompletableFuture
 					.runAsync(()->tourGuideService.trackUserLocation(user), forkJoinPool)
-					.thenAccept(unused->mockRewardsService.calculateRewards(user, allAttractions));
+					.thenRun(()->mockRewardsService.calculateRewards(user, allAttractions));
 		});
 		boolean result = forkJoinPool.awaitQuiescence(15,TimeUnit.MINUTES);
 		stopWatch.stop();

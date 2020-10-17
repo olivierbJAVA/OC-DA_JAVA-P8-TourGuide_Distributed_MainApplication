@@ -98,7 +98,7 @@ public class TestPerformanceHighVolumeGetRewards {
 			user.addToVisitedLocations(new VisitedLocation(user.getUserId(), allAttractions.get(0), new Date()));
 			CompletableFuture
 					.runAsync(()->mockTourGuideService.trackUserLocation(user), forkJoinPool)
-					.thenAccept(unused->rewardsService.calculateRewards(user, allAttractions));
+					.thenRun(()->rewardsService.calculateRewards(user, allAttractions));
 		});
 		boolean result = forkJoinPool.awaitQuiescence(20,TimeUnit.MINUTES);
 		stopWatch.stop();
