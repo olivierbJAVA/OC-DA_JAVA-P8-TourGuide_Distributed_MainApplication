@@ -2,7 +2,7 @@
 Welcome to TourGuide !
 
 - TourGuide is part of the TripMaster company applications portfolio
-- TourGuide is a web application which goal is help users to travel
+- TourGuide is a web application which goal is to help users to travel
 - The application is working but with some issues
 
 The goal of this project is to : 
@@ -112,7 +112,7 @@ The following EndPoints are exposed by the TourGuide main application :
 - GET  <http://localhost:8080/getPreferences> : to get travel preferences of the user
 >Request Parameter : *userName* = name of the user 
 
-- POST <http://localhost:8080/rating/postPreferences> : to post travel preferences of the user
+- POST <http://localhost:8080/postPreferences> : to post travel preferences of the user
 >Request Parameter : *userName* = name of the user 
 > / Request Body : *userPreferences* = preferences of the user
 
