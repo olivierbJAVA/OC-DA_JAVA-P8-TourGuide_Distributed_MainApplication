@@ -113,18 +113,6 @@ public class TourGuideService {
 				.GET()
 				.build();
 
-		// Essai sendAsync
-		/*
-		try {
-			CompletableFuture<HttpResponse <String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-			ObjectMapper mapper = new ObjectMapper();
-			visitedLocation = mapper.readValue(response.get().body(), VisitedLocation.class);
-		} catch (IOException | InterruptedException | ExecutionException e) {
-			logger.error(e.toString());
-			e.printStackTrace();
-		}
-		*/
-
 		try {
 			HttpResponse <String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
 			logger.debug("Status code = " + response.statusCode());
