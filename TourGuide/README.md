@@ -53,7 +53,7 @@ You need to install the following software :
 
 - Java 11
 - Gradle 6.6.1
-- Docker
+- Docker + Docker-Compose
 >You don't need to install SpringBoot by yourself because dependencies will be added by Gradle (Version of SpringBoot used is 2.1.6)
 
 ### Installing
@@ -66,7 +66,7 @@ You will find below a step by step explanation that tell you how to get a develo
 2.Install Gradle :
 <https://gradle.org/install/>
 
-3.Install Docker :
+3.Install Docker + Docker-Compose :
 <https://docs.docker.com/get-docker/>
 
 ### Application running
