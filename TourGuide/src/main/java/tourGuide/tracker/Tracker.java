@@ -13,12 +13,12 @@ import tourGuide.service.RewardsService;
 import tourGuide.service.TourGuideService;
 
 /**
- * Class managing the tracking of users, i.e. tracking of their location and update of rewards
+ * Class managing the tracking of users, i.e. tracking of their location and update of the rewards
  */
 public class Tracker extends Thread {
 	private Logger logger = LoggerFactory.getLogger(Tracker.class);
 
-	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(1);//initial = 5
+	private static final long trackingPollingInterval = TimeUnit.MINUTES.toSeconds(5);
 	private final ExecutorService executorService = Executors.newSingleThreadExecutor();
 	private final ForkJoinPool forkJoinPool = new ForkJoinPool(100);
 	private final TourGuideService tourGuideService;
@@ -42,7 +42,7 @@ public class Tracker extends Thread {
 	}
 
 	/**
-	 * Thread performing the tracking of users, i.e. tracking of their location and update of rewards
+	 * Thread performing the tracking of users, i.e. tracking of their location and update of the rewards
 	 */
 	@Override
 	public void run() {
@@ -71,9 +71,8 @@ public class Tracker extends Thread {
 				;
 			});
 
-			//Optional : in case you want to wait for the completion of track users and calculate rewards before Tracker sleeping
-			//Wait maximum time between Timeout and time for forkJoinPool to finish its tasks
-			forkJoinPool.awaitQuiescence(10,TimeUnit.MINUTES);
+			//Optional : in case we want to wait for the completion of track users and calculate rewards before Tracker sleeping
+			//forkJoinPool.awaitQuiescence(10,TimeUnit.MINUTES);
 
 			stopWatch.stop();
 			logger.debug("Tracker Time Elapsed: " + TimeUnit.MILLISECONDS.toSeconds(stopWatch.getTime()) + " seconds."); 
@@ -86,7 +85,6 @@ public class Tracker extends Thread {
 			}
 			/*
 			//Optional : in case we want to be sure that the completion of the tasks have been done in the trackingPollingInterval
-			//Wait maximum time between Timeout and time for forkJoinPool to finish its tasks
 			boolean result = forkJoinPool.awaitQuiescence(1,TimeUnit.MINUTES);
 			if(result) {
 				logger.debug("Tracking done in trackingPollingInterval");
